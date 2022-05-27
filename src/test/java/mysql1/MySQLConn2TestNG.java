@@ -25,16 +25,98 @@ public class MySQLConn2TestNG {
 
     @Test
     public void test1() throws SQLException {
-        String sql = "SELECT*FROM personel WHERE age>50 AND country LIKE 'U%' ORDER BY first_name";
+        String sql = "SELECT * FROM personel WHERE age>50 AND country LIKE 'U%'";
         ResultSet rs = stmt.executeQuery(sql);
-        rs.next(); 
-        Assert.assertEquals(rs.getString(2),"Anselm");
+        rs.next();
+        Assert.assertEquals(rs.getString(2),"Vevay");
 
         rs.next();//sonraki kaydı açıyoruz
-        Assert.assertEquals(rs.getString("country"),"Ukraine");
+        Assert.assertEquals(rs.getString("country"),"United States");
     }
+    @Test(priority = 1)
+    public void test2() throws SQLException {
+        String sql = "SELECT country, gender, COUNT(*) AS count FROM personel GROUP BY country, gender ORDER BY country, gender";
+        ResultSet rs = stmt.executeQuery(sql);
+        ResultSetMetaData rsmd = rs.getMetaData();
+        //getMetaData --> elde edilen ResulSet nesnesi hakkında sütun sayısı,sütun adları, sütunların veri türleri,tablo adı vs.
+        //gibi bilgiler sağlar
+        int colCount = rsmd.getColumnCount();
+        System.out.println(colCount); // kaç tane kolon var. 3 tane
 
+        for (int i = 1; i <= colCount; i++) {
+            System.out.println(rsmd.getColumnLabel(i) + "," + rsmd.getColumnTypeName(i) + "," + rsmd.getColumnDisplaySize(i));
+        }
 
+    }
+    @Test
+    public void test3() throws SQLException {
+        String sql = "SELECT country, gender, COUNT(*) AS count FROM personel GROUP BY country, gender ORDER BY country, gender";
+        ResultSet rs = stmt.executeQuery(sql);
+        ResultSetMetaData rsmd = rs.getMetaData();
+
+        int col1 = rsmd.getColumnDisplaySize(1);
+        int col2 = rsmd.getColumnDisplaySize(2);
+        int col3 = rsmd.getColumnDisplaySize(3);
+
+        String title1 = rsmd.getColumnLabel(1);
+        String title2 = rsmd.getColumnLabel(2);
+        String title3 = rsmd.getColumnLabel(3);
+
+        String strFormat = "%-" + col1 + "s %-" + col2 + "s %-" + col3 + "s\n";
+        /*
+                s formats strings. ---> s dizeleri biçimlendirir
+                d formats decimal integers.  ---> d ondalık tam sayıları biçimlendiir
+                f formats floating-point numbers.  ----> f kayan noktalı tam sayıları
+                t formats date/time values.  ----> tarih/saat değerlerini biçimlendirir.
+                %n ---> dizeyi ayrı satırlara bölmek için kullanılır
+                printf("%S %n", "baeldung");  ---> BAELDUNG  %S --> dizeyi büyük harfe çevirir.
+                printf("'%15s' %n", "baeldung"); ---> mininmum uzunluk belirtmek için ---  '         baeldung'
+                printf("%-10s %n","baeldung"); -- dizeyi sola yaslamak için 'baeldung   '
+                printf("'%c%n'", 's');  ---> 's'
+                printf("'%C%n'", 's');  ---> 'S'  Geçersiz bir argüman verirsek Formatter IllegalFormatConversionException hatası verir
+                printf("'%5.2f'%n" , "5,1473"); ---> sayımızın genişiliğini 5 olarak alıyoruz ve ondalık kısmın uzunluğu 2 çıktı --- '  5,15'
+
+         */
+        System.out.printf(strFormat,title1,title2,title3);
+
+        while (rs.next()){
+            System.out.printf(strFormat, rs.getString(1), rs.getString(2), rs.getString(3));
+        }
+
+    }
+    @Test
+    public void test4() throws SQLException {
+        String sql = "SELECT first_name,last_name FROM personel ORDER BY first_name LIMIT 10";
+        ResultSet rs = stmt.executeQuery(sql);
+
+        ResultSetMetaData resultSetMetaData = rs.getMetaData();
+        int columnCount = resultSetMetaData.getColumnCount(); // 2 tane column var
+        int[] columnWith = new int[columnCount];
+
+        for (int i = 1; i <= columnCount; i++) {
+            columnWith[i-1] = resultSetMetaData.getColumnDisplaySize(i);
+        }
+        String[] columnName = new String[columnCount];
+        for (int i = 1; i <= columnCount; i++) {
+            columnName[i-1] = resultSetMetaData.getColumnLabel(i);
+        }
+        String strFormat = "";
+
+        for (int i = 0; i < columnCount; i++) {
+            strFormat += "%-" + columnWith[i] + "s";
+        }
+        strFormat += "\n";
+        System.out.printf(strFormat, columnName);
+
+        while (rs.next()){
+            String[] fieldName = new String[columnCount];
+            for (int i = 0; i < columnCount; i++) {
+                fieldName[i] = rs.getString(i+1);
+            }
+            System.out.printf(strFormat,fieldName);
+        }
+
+    }
 
     @AfterClass
     public void afterClass() throws SQLException {
