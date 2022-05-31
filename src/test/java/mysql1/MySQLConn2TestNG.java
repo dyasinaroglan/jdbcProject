@@ -63,20 +63,7 @@ public class MySQLConn2TestNG {
         String title3 = rsmd.getColumnLabel(3);
 
         String strFormat = "%-" + col1 + "s %-" + col2 + "s %-" + col3 + "s\n";
-        /*
-                s formats strings. ---> s dizeleri biçimlendirir
-                d formats decimal integers.  ---> d ondalık tam sayıları biçimlendiir
-                f formats floating-point numbers.  ----> f kayan noktalı tam sayıları
-                t formats date/time values.  ----> tarih/saat değerlerini biçimlendirir.
-                %n ---> dizeyi ayrı satırlara bölmek için kullanılır
-                printf("%S %n", "baeldung");  ---> BAELDUNG  %S --> dizeyi büyük harfe çevirir.
-                printf("'%15s' %n", "baeldung"); ---> mininmum uzunluk belirtmek için ---  '         baeldung'
-                printf("%-10s %n","baeldung"); -- dizeyi sola yaslamak için 'baeldung   '
-                printf("'%c%n'", 's');  ---> 's'
-                printf("'%C%n'", 's');  ---> 'S'  Geçersiz bir argüman verirsek Formatter IllegalFormatConversionException hatası verir
-                printf("'%5.2f'%n" , "5,1473"); ---> sayımızın genişiliğini 5 olarak alıyoruz ve ondalık kısmın uzunluğu 2 çıktı --- '  5,15'
 
-         */
         System.out.printf(strFormat,title1,title2,title3);
 
         while (rs.next()){
@@ -123,5 +110,6 @@ public class MySQLConn2TestNG {
         //connection kapatılacak
         stmt.close();
         conn.close();
+
     }
 }

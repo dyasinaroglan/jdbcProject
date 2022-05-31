@@ -5,7 +5,7 @@ import java.sql.*;
 public class MySQLConn1 {
 
     /*
-     JDBC --> JAva databese connections
+     JDBC --> Java databese connections
      veritabanı yeri
      kullanıcı
      şifre
@@ -40,7 +40,7 @@ public class MySQLConn1 {
                         + rs.getInt("age")); //db'deki age integer olmalı
             }
             stmt.close();
-            conn.close();  //veritabanında bsğlsntıyı kapatmayı unutmayalım
+            conn.close();  //veritabanında bağlantıyı kapatmayı unutmayalım
 
         } catch (SQLException e) {
             e.printStackTrace();
